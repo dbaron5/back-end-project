@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "zhrvfjhk",
+    "password": "BHdW18Shskq0CfKlJs0d3ZXymLiT9maB",
+    "database": "zhrvfjhk",
+    "host": "ruby.db.elephantsql.com",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "zhrvfjhk",
+    "password": "BHdW18Shskq0CfKlJs0d3ZXymLiT9maB",
+    "database": "zhrvfjhk",
+    "host": "ruby.db.elephantsql.com",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "zhrvfjhk",
+    "password": "BHdW18Shskq0CfKlJs0d3ZXymLiT9maB",
+    "database": "zhrvfjhk",
+    "host": "ruby.db.elephantsql.com",
+    "dialect": "postgres"
+  }
+}
