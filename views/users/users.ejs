@@ -5,8 +5,24 @@
   </head>
 
   <body>
-    <h1>Welcome to my EJS template!</h1>
+    <h1>Dan's Event Platform</h1>
+    <h3>User Login:</h3>
+    <div class="container">
+      <form action="/login/login" method="post">
+        <input type="text" name="email" />
+        <input type="password" name="password" />
+        <input type="submit" value="Log in" />
+      </form>
+    </div>
+    <h3>Create an account:</h3>
+    <div class="container">
+      <form action="/login/signup" method="post">
+        <input type="text" name="email" />
+        <input type="text" name="username" />
+        <input type="password" name="password" />
+        <input type="submit" value="Sign up" />
+      </form>
+    </div>
     <%- include ("../partials/nav.ejs") %>
-    <p><%= user.name %></p>
   </body>
 </html>

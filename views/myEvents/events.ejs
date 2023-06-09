@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EJS Template</title>
+  </head>
+
+  <body>
+    <h1>Dan's Event Platform</h1>
+    <h3>Create an event:</h3>
+    <div class="container">
+      <form action="/login/login" method="post">
+        <input type="text" name="Event Name" />
+        <input type="text" name="Description" />
+        <!-- <input type="text" name="Men's/Women's/Co-ed" /> -->
+        <input type="date" name="Location" />
+        <input type="time" name="Time" />
+        <input type="submit" value="Submit Event" />
+      </form>
+    </div>
+    <h3>List of upcoming events:</h3>
+    <div class="container">
+      <% allEvents.forEach((eventObject)=>{ %>
+      <div>
+        <h3><%= eventObject.dataValues.event %></h3>
+      </div>
+      <% }) %>
+    </div>
+    <%- include ("../partials/nav.ejs") %>
+  </body>
+</html>
