@@ -10,6 +10,7 @@ const PORT = 3000;
 app.set("views", "./views");
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/views/partials"));
+app.use(express.static(__dirname + "/public"));
 
 app.use("/users", users);
 app.use("/event", events);

@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>EJS Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styleEvents.css" />
   </head>
 
   <body>
@@ -9,21 +11,26 @@
     <h3>Create an event:</h3>
     <div class="container">
       <form action="/login/login" method="post">
+        <label for="Event Name">Event Name:</label>
         <input type="text" name="Event Name" />
+        <label for="Description">Event Details:</label>
         <input type="text" name="Description" />
-        <!-- <input type="text" name="Men's/Women's/Co-ed" /> -->
-        <input type="date" name="Location" />
+        <label for="Men's/Women's/Co-ed">Gender:</label>
+        <input type="text" name="Men's/Women's/Co-ed" />
+        <label for="Location">Location:</label>
+        <input type="text" name="Location" />
+        <label for="Date">Date:</label>
+        <input type="date" name="Date" />
+        <label for="Time">Time:</label>
         <input type="time" name="Time" />
-        <input type="submit" value="Submit Event" />
+        <input type="submit" value="Create Event" />
       </form>
     </div>
     <h3>List of upcoming events:</h3>
     <div class="container">
-      <% allEvents.forEach((eventObject)=>{ %>
-      <div>
-        <h3><%= eventObject.dataValues.event %></h3>
+      <div id="div2">
+        
       </div>
-      <% }) %>
     </div>
     <%- include ("../partials/nav.ejs") %>
   </body>

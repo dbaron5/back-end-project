@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Shantell+Sans&display=swap");
+
+body {
+  background-color: lightblue;
+  font-family: "Shantell Sans", cursive;
+  text-align: center;
+}
+
+h1 {
+  padding-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 15px;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+input {
+  padding: 2px;
+  height: 20px;
+  width: 150px;
+}
+
+.container #div2 {
+  display: flex;
+}

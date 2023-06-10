@@ -91,3 +91,15 @@ res.send(result.rows);
 });
 });
 });
+
+//events.ejs
+<% allEvents.forEach((eventObject)=>{ %>
+        <div>
+          <h3><%= eventObject.dataValues.event %></h3>
+          <h3><%= eventObject.dataValues.description %></h3>
+          <h3><%= eventObject.dataValues.men %></h3>
+          <h3><%= eventObject.dataValues.location %></h3>
+          <h3><%= eventObject.dataValues.date %></h3>
+          <h3><%= eventObject.dataValues.time %></h3>
+        </div>
+        <% }) %>
