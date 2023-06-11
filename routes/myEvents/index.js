@@ -1,42 +1,21 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
 const { Events } = require("../../models");
 router.use(express.json());
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) {
-    return res.sendStatus(401);
-  }
-  jwt.verify(token, "your-secret-key", (err, user) => {
-    if (err) {
-      return res.sendStatus(403);
-    }
-    req.user = user;
-    next();
-  });
-}
+router.get("/get_events", async (req, res) => {
+  res.send("/get_events");
+});
 
 async function getEvents(res) {
-  const allEvents = await Events.findAll();
-  console.log(allEvents[0].dataValues);
-  const userId = req.user.id;
-  for (const event of allEvents) {
-    const userEvent = await UserEvents.findOne({
-      where: {
-        eventId: event.id,
-        userId: userId,
-      },
+  try {
+    const allEvents = await Events.findAll();
+    res.render("events", {
+      allEvents: allEvents,
     });
-    event.dataValues.rsvpStatus = userEvent
-      ? userEvent.rsvpStatus
-      : "Not Attending.";
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve events." });
   }
-  return res.render("myEvents/events", {
-    allEvents: allEvents,
-  });
 }
 
 router.post("/create_event", async (req, res) => {

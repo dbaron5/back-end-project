@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+// const jwt = require("jsonwebtoken");
+// const bcrypt = require("bcrypt");
 const { Users } = require("../../models");
 router.use(express.json());
 
@@ -18,7 +18,7 @@ router.post("/sign_up", async (req, res) => {
     res.status(400).send("Please create a password.");
   }
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    //const hashedPassword = await bcrypt.hash(password, 10);
     const userToCreate = {
       email: email,
       username: username,
@@ -45,12 +45,12 @@ router.post("/login", async (req, res) => {
     if (!existingUser) {
       return res.status(400).send("Email address not found.");
     }
-    const compare = await bcrypt.compare(password, existingUser.password);
-    if (!compare) {
-      return res.send("Password doesn't match.");
-    }
-    const token = jwt.sign({ userId: existingUser.id }, "your-secret-key");
-    res.send({ token: token });
+    // const compare = await bcrypt.compare(password, existingUser.password);
+    // if (!compare) {
+    //   return res.send("Password doesn't match.");
+    // }
+    // const token = jwt.sign({ userId: existingUser.id }, "your-secret-key");
+    // res.send({ token: token });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");
