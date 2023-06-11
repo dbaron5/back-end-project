@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const { Users } = require("../../models");
-const { authenticate } = require("passport");
 router.use(express.json());
-//const ejs = require("ejs");
 
 router.post("/sign_up", async (req, res) => {
   const { email, username, password } = req.body;
@@ -18,7 +18,7 @@ router.post("/sign_up", async (req, res) => {
     res.status(400).send("Please create a password.");
   }
   try {
-    //    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const userToCreate = {
       email: email,
       username: username,
@@ -32,23 +32,25 @@ router.post("/sign_up", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  console.log(email);
+  if (!email || !password) {
+    res.status(400).send("Please provide email and password.");
+    return;
+  }
   try {
-    const { email, password } = req.body;
-    console.log(email);
     const existingUser = await Users.findOne({
       where: { email: email },
     });
-
     if (!existingUser) {
       return res.status(400).send("Email address not found.");
     }
-
     const compare = await bcrypt.compare(password, existingUser.password);
     if (!compare) {
       return res.send("Password doesn't match.");
     }
-
-    res.send("Successfully logged in");
+    const token = jwt.sign({ userId: existingUser.id }, "your-secret-key");
+    res.send({ token: token });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");

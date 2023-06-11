@@ -1,8 +1,23 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const { Events } = require("../../models");
-const { authenticate } = require("passport");
 router.use(express.json());
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) {
+    return res.sendStatus(401);
+  }
+  jwt.verify(token, "your-secret-key", (err, user) => {
+    if (err) {
+      return res.sendStatus(403);
+    }
+    req.user = user;
+    next();
+  });
+}
 
 async function getEvents(res) {
   const allEvents = await Events.findAll();
@@ -17,7 +32,7 @@ async function getEvents(res) {
     });
     event.dataValues.rsvpStatus = userEvent
       ? userEvent.rsvpStatus
-      : "Not Attending";
+      : "Not Attending.";
   }
   return res.render("myEvents/events", {
     allEvents: allEvents,
@@ -60,32 +75,22 @@ router.post("/create_event", async (req, res) => {
   getEvents(res);
 });
 
-// ...
-
-router.post("/rsvp/:eventId", authenticate("jwt", { session: false }), async (req, res) => {
+router.post("/rsvp/:eventId", async (req, res) => {
   const eventId = req.params.eventId;
-  const userId = req.user.id;
-  const rsvpStatus = req.body.rsvpStatus;
+  const { rsvpStatus } = req.body;
   try {
-      const userEvent = await UserEvents.findOne({
-      where: {
-        eventId: eventId,
-        userId: userId,
-      },
-    });
-    if (userEvent) {
-      userEvent.rsvpStatus = rsvpStatus;
-      await userEvent.save();
-    } else {
-      await UserEvents.create({
-        eventId: eventId,
-        userId: userId,
-        rsvpStatus: rsvpStatus,
-      });
+    const existingEvent = await Events.findByPk(eventId);
+    if (!existingEvent) {
+      return res.status(400).send("Event not found.");
     }
-    res.redirect("/events/" + eventId);
+    const newRegistration = await EventRegistrations.create({
+      eventId: eventId,
+      userId: req.user.userId,
+      rsvpStatus: rsvpStatus,
+    });
+    res.status(200).send("RSVP submitted successfully.");
   } catch (error) {
-    res.status(500).json({ error: "Failed to update RSVP status." });
+    res.status(500).json({ error: "Failed to submit RSVP." });
   }
 });
 
