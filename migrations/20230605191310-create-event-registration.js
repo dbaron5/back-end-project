@@ -1,31 +1,39 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('eventRegistrations', {
-      id: {
+    await queryInterface.createTable("eventRegistration", {
+      userId: {
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      attendee: {
-        type: Sequelize.STRING
-      },
-      eventRegistered: {
-        type: Sequelize.STRING
+      eventId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Events",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('eventRegistrations');
-  }
+    await queryInterface.dropTable("eventRegistration");
+  },
 };

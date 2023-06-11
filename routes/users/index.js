@@ -27,28 +27,36 @@ router.post("/sign_up", async (req, res) => {
     const newUser = await Users.create(userToCreate);
     //    res.redirect();
   } catch (error) {
-    res.status(500).json({ error: "Failed to create user" });
+    res.status(500).json({ error: "Failed to create user." });
   }
 });
 
-router.post("/login", authenticate, (req, res) => {
-  res.send("Successfully logged in");
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(email);
+    const existingUser = await Users.findOne({
+      where: { email: email },
+    });
+
+    if (!existingUser) {
+      return res.status(400).send("Email address not found.");
+    }
+
+    const compare = await bcrypt.compare(password, existingUser.password);
+    if (!compare) {
+      return res.send("Password doesn't match.");
+    }
+
+    res.send("Successfully logged in");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
 });
 
 router.get("/user_data", (req, res) => {
   res.render("./users/users.ejs", { user: { name: "Daniel" } });
 });
-
-// router.post("/post_users", async (req, res) => {
-//   res.send("/post_users");
-// });
-
-// router.put("/put_users", async (req, res) => {
-//   res.send("/put_users");
-// });
-
-// router.delete("/delete_users", async (req, res) => {
-//   res.send("/delete_users");
-// });
 
 module.exports = router;

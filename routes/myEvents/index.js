@@ -7,6 +7,18 @@ router.use(express.json());
 async function getEvents(res) {
   const allEvents = await Events.findAll();
   console.log(allEvents[0].dataValues);
+  const userId = req.user.id;
+  for (const event of allEvents) {
+    const userEvent = await UserEvents.findOne({
+      where: {
+        eventId: event.id,
+        userId: userId,
+      },
+    });
+    event.dataValues.rsvpStatus = userEvent
+      ? userEvent.rsvpStatus
+      : "Not Attending";
+  }
   return res.render("myEvents/events", {
     allEvents: allEvents,
   });
@@ -42,31 +54,74 @@ router.post("/create_event", async (req, res) => {
       date: date,
       time: time,
     };
-    const newEvent = await Events.create(eventToCreate);
   } catch (error) {
     res.status(500).json({ error: "Failed to create event" });
   }
   getEvents(res);
 });
 
-router.post("/event_created", authenticate, (req, res) => {
-  res.send("Event successfully created");
+// ...
+
+router.post("/rsvp/:eventId", authenticate("jwt", { session: false }), async (req, res) => {
+  const eventId = req.params.eventId;
+  const userId = req.user.id;
+  const rsvpStatus = req.body.rsvpStatus;
+  try {
+      const userEvent = await UserEvents.findOne({
+      where: {
+        eventId: eventId,
+        userId: userId,
+      },
+    });
+    if (userEvent) {
+      userEvent.rsvpStatus = rsvpStatus;
+      await userEvent.save();
+    } else {
+      await UserEvents.create({
+        eventId: eventId,
+        userId: userId,
+        rsvpStatus: rsvpStatus,
+      });
+    }
+    res.redirect("/events/" + eventId);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update RSVP status." });
+  }
 });
 
-router.get("/get_events", async (req, res) => {
-  getEvents(res);
+router.put("/update_event/:eventId", async (req, res) => {
+  const eventId = req.params.eventId;
+  const { event, description, men, location, date, time } = req.body;
+  try {
+    const existingEvent = await Events.findByPk(eventId);
+    if (!existingEvent) {
+      return res.status(400).send("Event not found.");
+    }
+    existingEvent.event = event || existingEvent.event;
+    existingEvent.description = description || existingEvent.description;
+    existingEvent.men = men || existingEvent.men;
+    existingEvent.location = location || existingEvent.location;
+    existingEvent.date = date || existingEvent.date;
+    existingEvent.time = time || existingEvent.time;
+    await existingEvent.save();
+    getEvents(res);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to update event." });
+  }
 });
 
-// router.post("/post_events", async (req, res) => {
-//   res.send("/post_events");
-// });
-
-// router.put("/put_events", async (req, res) => {
-//   res.send("/put_events");
-// });
-
-// router.delete("/delete_events", async (req, res) => {
-//   res.send("/delete_events");
-// });
+router.delete("/delete_event/:eventId", async (req, res) => {
+  const eventId = req.params.eventId;
+  try {
+    const eventToDelete = await Events.findByPk(eventId);
+    if (!eventToDelete) {
+      return res.status(400).send("Event not found.");
+    }
+    await eventToDelete.destroy();
+    getEvents(res);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to delete event." });
+  }
+});
 
 module.exports = router;

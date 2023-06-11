@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class eventRegistration extends Model {
+  class EventRegistration extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,17 +9,33 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      EventRegistration.belongsTo(models.Users, {
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+      });
+      EventRegistration.belongsTo(models.Events, {
+        foreignKey: "eventId",
+        onDelete: "CASCADE",
+      });
     }
   }
-  eventRegistration.init(
+
+  EventRegistration.init(
     {
-      attendee: DataTypes.STRING,
-      eventRegistered: DataTypes.STRING,
+      userId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      eventId: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
     },
     {
       sequelize,
-      modelName: "eventRegistration",
+      modelName: "EventRegistration",
     }
   );
-  return eventRegistration;
+
+  return EventRegistration;
 };

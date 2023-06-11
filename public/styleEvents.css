@@ -7,7 +7,7 @@ body {
 }
 
 h1 {
-  padding-bottom: 20px;
+  padding-bottom: 30px;
 }
 
 form {
@@ -16,7 +16,12 @@ form {
   align-items: center;
   column-gap: 15px;
   justify-content: center;
-  padding-bottom: 20px;
+  padding-bottom: 30px;
+}
+
+label {
+  font-size: large;
+  padding-left: 10px;
 }
 
 input {
@@ -25,6 +30,31 @@ input {
   width: 150px;
 }
 
-.container #div2 {
-  display: flex;
+.table-container {
+  max-height: 475px;
+  overflow-y: auto;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-container th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: lightgrey;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid black;
+}
+
+.table-container td {
+  background-color: white;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid black;
 }

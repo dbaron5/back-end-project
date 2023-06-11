@@ -8,7 +8,7 @@
 
   <body>
     <h1>Dan's Event Platform</h1>
-    <h3>Create an event:</h3>
+    <h2>Create an event:</h2>
     <div class="container">
       <form action="/login/login" method="post">
         <label for="Event Name">Event Name:</label>
@@ -23,14 +23,49 @@
         <input type="date" name="Date" />
         <label for="Time">Time:</label>
         <input type="time" name="Time" />
-        <input type="submit" value="Create Event" />
+        <input id="createButton" type="submit" value="Create Event" />
       </form>
     </div>
-    <h3>List of upcoming events:</h3>
-    <div class="container">
-      <div id="div2">
-        
-      </div>
+    <h2>List of upcoming events:</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Description</th>
+            <th>Gender</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>RSVP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% allEvents.forEach((eventObject)=>{ %>
+          <tr>
+            <td><%= eventObject.dataValues.event %></td>
+            <td><%= eventObject.dataValues.description %></td>
+            <td><%= eventObject.dataValues.men %></td>
+            <td><%= eventObject.dataValues.location %></td>
+            <td><%= eventObject.dataValues.date %></td>
+            <td><%= eventObject.dataValues.time %></td>
+            <td>
+              <% if (eventObject.rsvpStatus === 'Not Attending') { %>
+              <form action="/rsvp/<%= eventObject.id %>" method="POST">
+                <input type="hidden" name="rsvpStatus" value="Attending" />
+                <button type="submit">RSVP</button>
+              </form>
+              <% } else { %>
+              <form action="/rsvp/<%= eventObject.id %>" method="POST">
+                <input type="hidden" name="rsvpStatus" value="Not Attending" />
+                <button type="submit">Cancel RSVP</button>
+              </form>
+              <% } %>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
     </div>
     <%- include ("../partials/nav.ejs") %>
   </body>
