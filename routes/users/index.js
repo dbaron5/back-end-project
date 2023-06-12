@@ -25,7 +25,7 @@ router.post("/sign_up", async (req, res) => {
       password: password,
     };
     const newUser = await Users.create(userToCreate);
-    //    res.redirect();
+    res.redirect();
   } catch (error) {
     res.status(500).json({ error: "Failed to create user." });
   }
@@ -45,12 +45,7 @@ router.post("/login", async (req, res) => {
     if (!existingUser) {
       return res.status(400).send("Email address not found.");
     }
-    // const compare = await bcrypt.compare(password, existingUser.password);
-    // if (!compare) {
-    //   return res.send("Password doesn't match.");
-    // }
-    // const token = jwt.sign({ userId: existingUser.id }, "your-secret-key");
-    // res.send({ token: token });
+    res.redirect("/events");
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");

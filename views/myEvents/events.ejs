@@ -12,13 +12,29 @@
     <div class="container">
       <form action="/login/login" method="post">
         <label for="Event Name">Event Name:</label>
-        <input type="text" name="Event Name" />
+        <input
+          type="text"
+          name="Event Name"
+          placeholder="i.e. Basketball, Volleyball"
+        />
         <label for="Description">Event Details:</label>
-        <input type="text" name="Description" />
-        <label for="Men's/Women's/Co-ed">Gender:</label>
-        <input type="text" name="Men's/Women's/Co-ed" />
+        <input
+          type="text"
+          name="Description"
+          placeholder="i.e. # of participants, rules"
+        />
+        <label for="gender">Gender:</label>
+        <select name="gender" id="gender">
+          <option value="Men's">Men's</option>
+          <option value="Women's">Women's</option>
+          <option value="Co-ed">Co-ed</option>
+        </select>
         <label for="Location">Location:</label>
-        <input type="text" name="Location" />
+        <input
+          type="text"
+          name="Location"
+          placeholder="i.e. Heritage Park, NFHS"
+        />
         <label for="Date">Date:</label>
         <input type="date" name="Date" />
         <label for="Time">Time:</label>
@@ -67,6 +83,5 @@
         </tbody>
       </table>
     </div>
-    <%- include ("../partials/nav.ejs") %>
   </body>
 </html>

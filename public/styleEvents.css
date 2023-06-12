@@ -19,19 +19,21 @@ form {
   padding-bottom: 30px;
 }
 
-label {
-  font-size: large;
-  padding-left: 10px;
+form input[type="text"],
+form select,
+form input[type="date"],
+form input[type="time"],
+form input[type="submit"] {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-input {
-  padding: 2px;
-  height: 20px;
-  width: 150px;
+label {
+  font-size: large;
 }
 
 .table-container {
-  max-height: 475px;
+  max-height: 517px;
   overflow-y: auto;
   position: relative;
   padding-bottom: 30px;

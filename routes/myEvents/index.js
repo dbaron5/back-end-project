@@ -3,16 +3,6 @@ const router = express.Router();
 const { Events } = require("../../models");
 router.use(express.json());
 
-const getData = async (userId) => {
-  try {
-    const userData = await Users.findOne({ where: { id: userId } });
-    return userData;
-  } catch (error) {
-    console.log("Error fetching user data:", error);
-    throw error;
-  }
-};
-
 async function getEvents(res) {
   const allEvents = await Events.findAll();
   console.log(allEvents[0].dataValues);
@@ -56,10 +46,6 @@ router.post("/create_event", async (req, res) => {
     res.status(500).json({ error: "Failed to create event" });
   }
   getEvents(res);
-});
-
-router.post("/event_created", (req, res) => {
-  res.send("Event successfully created");
 });
 
 router.get("/get_events", async (req, res) => {
