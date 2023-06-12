@@ -49,7 +49,7 @@
             <td><%= eventObject.dataValues.location %></td>
             <td><%= eventObject.dataValues.date %></td>
             <td><%= eventObject.dataValues.time %></td>
-            <!-- <td>
+            <td>
               <% if (eventObject.rsvpStatus === 'Not Attending') { %>
               <form action="/rsvp/<%= eventObject.id %>" method="POST">
                 <input type="hidden" name="rsvpStatus" value="Attending" />
@@ -61,7 +61,7 @@
                 <button type="submit">Cancel RSVP</button>
               </form>
               <% } %>
-            </td> -->
+            </td>
           </tr>
           <% }) %>
         </tbody>

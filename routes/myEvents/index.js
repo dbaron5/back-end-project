@@ -3,19 +3,22 @@ const router = express.Router();
 const { Events } = require("../../models");
 router.use(express.json());
 
-router.get("/get_events", async (req, res) => {
-  res.send("/get_events");
-});
+const getData = async (userId) => {
+  try {
+    const userData = await Users.findOne({ where: { id: userId } });
+    return userData;
+  } catch (error) {
+    console.log("Error fetching user data:", error);
+    throw error;
+  }
+};
 
 async function getEvents(res) {
-  try {
-    const allEvents = await Events.findAll();
-    res.render("events", {
-      allEvents: allEvents,
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve events." });
-  }
+  const allEvents = await Events.findAll();
+  console.log(allEvents[0].dataValues);
+  return res.render("myEvents/events", {
+    allEvents: allEvents,
+  });
 }
 
 router.post("/create_event", async (req, res) => {
@@ -48,9 +51,18 @@ router.post("/create_event", async (req, res) => {
       date: date,
       time: time,
     };
+    const newEvent = await Events.create(eventToCreate);
   } catch (error) {
     res.status(500).json({ error: "Failed to create event" });
   }
+  getEvents(res);
+});
+
+router.post("/event_created", (req, res) => {
+  res.send("Event successfully created");
+});
+
+router.get("/get_events", async (req, res) => {
   getEvents(res);
 });
 
