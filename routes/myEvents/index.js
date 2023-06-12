@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Events } = require("../../models");
+const jwt = require("jsonwebtoken");
 router.use(express.json());
 
 async function getEvents(res) {

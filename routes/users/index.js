@@ -1,34 +1,46 @@
 const express = require("express");
 const router = express.Router();
-// const jwt = require("jsonwebtoken");
-// const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const { Users } = require("../../models");
+const models = require("../../models");
+const { cookieJwtAuth } = require("../../middleware/cookieJwtAuth");
+const jwt = require("jsonwebtoken");
+const cors = require("cors");
 router.use(express.json());
+
+router.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+router.use(cors());
+router.use(bodyParser.json());
+router.use(cookieParser());
+const SequelizeStore = require("connect-session-sequelize")(session.Store);
+const store = new SequelizeStore({ db: models.sequelize });
+router.use(
+  session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: store,
+  })
+);
+store.sync();
 
 router.post("/sign_up", async (req, res) => {
   const { email, username, password } = req.body;
-  console.log(email);
-  if (!email) {
-    res.status(400).send("Please include an email address.");
-  }
-  if (!username) {
-    res.status(400).send("Please create a username.");
-  }
-  if (!password) {
-    res.status(400).send("Please create a password.");
-  }
-  try {
-    //const hashedPassword = await bcrypt.hash(password, 10);
-    const userToCreate = {
+  bcrypt.hash(password, 10, async (err, hash) => {
+    const userToCreate = await Users.create({
       email: email,
       username: username,
-      password: password,
-    };
-    const newUser = await Users.create(userToCreate);
-    res.redirect();
-  } catch (error) {
-    res.status(500).json({ error: "Failed to create user." });
-  }
+      password: hash,
+    });
+    res.send(userToCreate);
+  });
 });
 
 router.post("/login", async (req, res) => {
